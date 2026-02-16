@@ -1,0 +1,8 @@
+{
+    "model_type": "densenet",
+    "n_mw_configs": 5,
+    "n_freq_points": 250,
+    "batch_size": 16,
+    "learning_rate": 0.0007,
+    "timestamp": "2026-02-13 09:43:14"
+}
