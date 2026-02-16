@@ -156,15 +156,10 @@ def run_all_tests():
         test_mw_config_generation()
         test_dataset_generation()
         
-        # Test d'optimisation (optionnel - peut être long)
-        print("\nWould you like to run the quick optimization test?")
+        # Test d'optimisation rapide (automatique)
+        print("\nRunning quick optimization test (2 iterations)...")
         print("(This will take a few minutes)")
-        response = input("Run optimization test? (y/n): ").lower().strip()
-        
-        if response == 'y':
-            test_quick_optimization()
-        else:
-            print("\nSkipping optimization test.")
+        test_quick_optimization()
         
         print("\n" + "="*60)
         print("✓ ALL TESTS PASSED!")
