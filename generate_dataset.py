@@ -4,18 +4,19 @@ import pandas as pd
 from tqdm import tqdm
 from multiprocessing import Pool, cpu_count
 from functools import partial
-from Ensemble_Ellipticity_ESR_Simulator_V2 import Ensemble_Spectrum, Ensemble_Spectrum_HF
+# from Ensemble_Ellipticity_ESR_Simulator_V2 import Ensemble_Spectrum, Ensemble_Spectrum_HF
+from Ensemble_Ellipticity_ESR_Simulator import Ensemble_Spectrum, Ensemble_Spectrum_HF
+
 
 # ========== CONFIGURATION DU DATASET ==========
 N_MW_CONFIGS = 5     # Nombre de configurations MW différentes pour chaque B
 FREQ_START = 2.70e3  # MHz
 FREQ_END = 3.05e3    # MHz
-FREQ_POINTS = 250    # Nombre de points de fréquence
-TILT_X = 4.0         # Inclinaison du diamant en degrés (axe x)
+FREQ_POINTS = 300    # Nombre de points de fréquence
+TILT_X = 0.0         # Inclinaison du diamant en degrés (axe x)
 TILT_Y = 0.0         # Inclinaison du diamant en degrés (axe y)
 INCLUDE_HYPERFINE = True
-# OUTPUT_DIR = "odmr_synthetic_dataset"   # Dossier de sortie pour les fichiers générés
-OUTPUT_DIR = "test_V2"
+OUTPUT_DIR = "datasets/odmr_synthetic_dataset_2"  # Dossier de sortie pour les fichiers générés
 B_CONFIGS_FILE = "B_configs.npy"  # Fichier de B configs isotropes
 
 # Configurations MW used for the dataset odmr_synthetic_dataset
@@ -26,6 +27,15 @@ B_CONFIGS_FILE = "B_configs.npy"  # Fichier de B configs isotropes
 #     ((0.6, 0.2, 0.0), np.deg2rad(180)), # Config 4 : Elliptique modéré inversé
 #     ((0.8, 0.4, 0.0), np.deg2rad(180)), # Config 5 : Elliptique intermédiaire
 # ]
+
+# Configurations MW used for the dataset odmr_synthetic_dataset_2
+MW_CONFIGS = [
+    ((0.4, 0.4, 0.0), np.deg2rad(240)),
+    ((0.1, 0.4, 0.0), 0.0),
+    ((0.1, 0.4, 0.0), np.deg2rad(180)),
+    ((0.2, 0.2, 0.0), np.deg2rad(300)),
+    ((0.8, 0.4, 0.0), np.deg2rad(180)),
+]
 
 # Configurations MW used for the dataset test
 # MW_CONFIGS = [
@@ -41,7 +51,7 @@ B_CONFIGS_FILE = "B_configs.npy"  # Fichier de B configs isotropes
 # ]
 
 # MW Configurations used for the dataset test_V2
-MW_CONFIGS = [
+# MW_CONFIGS = [
     # ((1.0, 0.1, 0.0), np.deg2rad(90)), # neutre
 
     # ((0.6, 0.4, 0.0), np.deg2rad(90)),    # ↓peaks 4, 6
@@ -57,12 +67,12 @@ MW_CONFIGS = [
     # ((0.2, 0.2, 0.0), np.deg2rad(90)),
     # ((2.0, 0.0, 0.0), np.deg2rad(90)),
 
-    ((0.80, 0.70, 0.0), np.deg2rad(120.0)),
-    ((0.20, 0.60, 0.0), np.deg2rad(60.0)),
-    ((0.20, 0.70, 0.0), np.deg2rad(180.0)),
-    ((1.00, 0.60, 0.0), np.deg2rad(180.0)),
-    ((0.70, 1.60, 0.0), np.deg2rad(300.0)),    
-]
+#     ((0.80, 0.70, 0.0), np.deg2rad(120.0)),
+#     ((0.20, 0.60, 0.0), np.deg2rad(60.0)),
+#     ((0.20, 0.70, 0.0), np.deg2rad(180.0)),
+#     ((1.00, 0.60, 0.0), np.deg2rad(180.0)),
+#     ((0.70, 1.60, 0.0), np.deg2rad(300.0)),    
+# ]
 
 # Nombre de processus parallèles (utilise tous les CPU disponibles par défaut)
 N_PROCESSES = cpu_count()

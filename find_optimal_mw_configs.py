@@ -20,7 +20,8 @@ TILT_Y = 0.0         # Diamond tilt in degrees (y-axis)
 MW_X_SWEEP = np.linspace(0.1, 2.0, 20)
 MW_Y_SWEEP = np.linspace(0.1, 2.0, 20)
 MW_PHASES = np.array([0, 60, 120, 180, 240, 300])
-B = [0.005, 0.002, 0.003]
+# B = [0.005, 0.002, 0.003]
+B = np.load("B_configs.npy").tolist()[0]  # Load the first B configuration as default
 freq_list = np.linspace(FREQ_START, FREQ_END, FREQ_POINTS)
 
 def get_all_spectra(B, mw_x_sweep, mw_y_sweep, mw_phases, tilt_x_deg, tilt_y_deg):

@@ -1,0 +1,5 @@
+models_*/
+mw_spectra_*/
+*.pyc
+__pycache__/
+datasets/*

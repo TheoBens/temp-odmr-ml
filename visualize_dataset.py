@@ -5,7 +5,7 @@ from matplotlib.widgets import Slider
 import os
 
 # ========== CONFIGURATION ==========
-OUTPUT_DIR = "test_V2"
+OUTPUT_DIR = "datasets/odmr_synthetic_dataset_2"
 
 def load_dataset():
     """

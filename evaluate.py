@@ -5,14 +5,19 @@ from dataloader import load_odmr_dataset, create_train_test_split, create_datalo
 from models import get_model
 
 
-def evaluate_model(dataset_dir="odmr_synthetic_dataset", model_dir="models_hybrid",
-                   model_filename="best_model.pth", batch_size=16):
+def evaluate_model(dataset_dir="datasets/odmr_synthetic_dataset", model_dir="models_hybrid",
+                   model_filename="best_model.pth", batch_size=16, max_mw_configs=None):
     
     device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
     print(f"Using device: {device}")
 
     # Load dataset
-    X, y, frequencies, mw_configs, scaler_X, scaler_y = load_odmr_dataset(dataset_dir=dataset_dir, flatten=False, normalize=True)
+    X, y, frequencies, mw_configs, scaler_X, scaler_y = load_odmr_dataset(
+        dataset_dir=dataset_dir, 
+        flatten=False, 
+        normalize=True,
+        max_mw_configs=max_mw_configs
+    )
 
     # Create train/val/test split
     X_train, X_val, X_test, y_train, y_val, y_test = create_train_test_split(X, y)
@@ -34,7 +39,7 @@ def evaluate_model(dataset_dir="odmr_synthetic_dataset", model_dir="models_hybri
         config["n_freq_points"]
     ).to(device)
 
-    checkpoint = torch.load(checkpoint_path, map_location=device)
+    checkpoint = torch.load(checkpoint_path, map_location=device, weights_only=False)
     model.load_state_dict(checkpoint["model_state_dict"])
     model.eval()
 
@@ -108,4 +113,10 @@ def evaluate_model(dataset_dir="odmr_synthetic_dataset", model_dir="models_hybri
 
 
 if __name__ == "__main__":
-    evaluate_model('odmr_synthetic_dataset_V2', 'models_linear_V2', 'best_model.pth', batch_size=16)
+    evaluate_model(
+        dataset_dir='datasets/odmr_synthetic_dataset', 
+        model_dir='models_trained/models_cnn1d_V2_optimized', 
+        model_filename='best_model.pth', 
+        batch_size=16,
+        max_mw_configs=None  # Utiliser toutes les configs MW (5)
+    )

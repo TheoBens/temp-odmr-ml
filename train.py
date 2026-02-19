@@ -391,13 +391,12 @@ def train_model(dataset_dir='odmr_synthetic_dataset',
 if __name__ == "__main__":
 
     train_history, val_history, model, test_loader, scaler_y = train_model(
-        dataset_dir='odmr_synthetic_dataset',
-        model_type='linear',
+        dataset_dir='datasets/odmr_synthetic_dataset_2',
+        model_type='cnn1d',
         batch_size=16,
         n_epochs=200,
         learning_rate=0.0007,
-        save_dir='models_linear'
+        save_dir='models_trained/models_cnn1d_2'
     )
     
-    print("\n✓ Training completed successfully!")
-    print(f"✓ Model saved in: models_linear/")
+    print(f"✓ Model saved in: models_trained/models_cnn1d_2/")

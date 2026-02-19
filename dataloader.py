@@ -47,7 +47,7 @@ class ODMRDataset(Dataset):
         return signal, B_field
 
 
-def load_odmr_dataset(dataset_dir, flatten=False, normalize=True):
+def load_odmr_dataset(dataset_dir, flatten=False, normalize=True, max_mw_configs=None):
     """
     Charge le dataset ODMR complet.
     
@@ -60,6 +60,9 @@ def load_odmr_dataset(dataset_dir, flatten=False, normalize=True):
         Si False, garde la structure 2D (N_MW, FREQ_POINTS)
     normalize : bool
         Normaliser les spectres et champs magnétiques
+    max_mw_configs : int, optional
+        Nombre maximum de configurations MW à utiliser (garde les N premières)
+        Si None, utilise toutes les configurations
     
     Returns:
     --------
@@ -88,7 +91,14 @@ def load_odmr_dataset(dataset_dir, flatten=False, normalize=True):
     
     # Charger le premier fichier pour déterminer les dimensions
     first_signal = np.load(os.path.join(signals_dir, signal_files[0]))
-    n_mw_configs, n_freq_points = first_signal.shape
+    n_mw_configs_full, n_freq_points = first_signal.shape
+    
+    # Limiter le nombre de configs MW si spécifié
+    if max_mw_configs is not None:
+        n_mw_configs = min(max_mw_configs, n_mw_configs_full)
+        print(f"Utilisation de {n_mw_configs}/{n_mw_configs_full} configurations MW")
+    else:
+        n_mw_configs = n_mw_configs_full
     
     # Initialiser les tableaux
     if flatten:
@@ -99,10 +109,14 @@ def load_odmr_dataset(dataset_dir, flatten=False, normalize=True):
     y = np.zeros((n_samples, 3))
     
     # Charger tous les spectres et champs magnétiques
-    print("Chargement du dataset...")
+    print("Chargement du dataset", dataset_dir)
     for i, signal_file in enumerate(tqdm(signal_files, desc="Chargement")):
         # Charger le spectre
         signal = np.load(os.path.join(signals_dir, signal_file))
+        
+        # Ne garder que les N premières configs MW si spécifié
+        if max_mw_configs is not None:
+            signal = signal[:max_mw_configs, :]
         
         if flatten:
             X[i] = signal.flatten()
@@ -127,7 +141,15 @@ def load_odmr_dataset(dataset_dir, flatten=False, normalize=True):
         scaler_y = StandardScaler()
         y = scaler_y.fit_transform(y)
         
+        # Ne retourner que les configs MW utilisées
+        if max_mw_configs is not None:
+            mw_configs = mw_configs[:max_mw_configs]
+        
         return X, y, frequencies, mw_configs, scaler_X, scaler_y
+    
+    # Ne retourner que les configs MW utilisées
+    if max_mw_configs is not None:
+        mw_configs = mw_configs[:max_mw_configs]
     
     return X, y, frequencies, mw_configs, None, None
 
